@@ -1,6 +1,6 @@
 Practice:
  - Deploy a python script into an aws EC2 instance that comsumes a weather api in order to send messages 
- to a particular user via whatsapp with the forecast information.
+ to a particular user via SMS with the forecast information.
 
 Resources:
 
