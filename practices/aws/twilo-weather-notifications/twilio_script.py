@@ -37,6 +37,7 @@ def get_daily_forecast():
         twilio_config.PHONE_NUMBER
     )
 
+    print(f'Message sent successfuly {message_id}')
 
 if __name__ == '__main__':
     get_daily_forecast()

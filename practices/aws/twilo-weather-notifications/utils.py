@@ -14,6 +14,8 @@ def get_date():
 
 
 def build_template_message_body(date, country, forecast_data):
+    if forecast_data.empty:
+        return f'Morning! The weather forecast today {date} in {country} is Excellent, no rain for today!'
     return f"Morning! \n\n\n The weather forecast today {date} in {country} is : \n\n\n {str(forecast_data)}"
 
 
@@ -68,7 +70,6 @@ def create_dataframe(data):
         (df['Hour'] > 6) &
         (df['Hour'] < 22)
     ]
-
     df_rainy_only = df_rainy_only[['Hour', 'Condition']]
     df_rainy_only.set_index('Hour', inplace=True)
     return df_rainy_only
