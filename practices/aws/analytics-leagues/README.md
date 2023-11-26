@@ -1,7 +1,7 @@
 
 ### Practice:
 
-- Create a pipeline in Airflow that extracts the current football leagues information via python web scraping from ![ESPN](https://www.espn.com.co/) and connect to Snowflake so that ingest the result data into a database and WH.
+- Create a pipeline in Airflow that extracts the current football leagues information via python web scraping from [ESPN](https://www.espn.com.co/) and connect to Snowflake so that ingest the result data into a database and WH.
 
 ### References:
 
@@ -28,7 +28,7 @@ astro dev stop
 ### Find port and kill process if postgres port is in used
 ```sh
 netstat -aon | findstr :5432
-taskkill/pid <el pid de la task> /F
+taskkill/pid <pid task> /F
 ```
 
 ### Env variables
