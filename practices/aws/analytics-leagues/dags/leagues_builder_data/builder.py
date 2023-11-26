@@ -35,7 +35,9 @@ def get_data(url, league):
 
 
 def data_processing(df):
-
+    """ 
+        Extracts information league by league and return the data frame
+    """
     df_spain = get_data(df['URL'][0], df['LEAGUE'][0])
     df_premier = get_data(df['URL'][1], df['LEAGUE'][1])
     df_italy = get_data(df['URL'][2], df['LEAGUE'][2])

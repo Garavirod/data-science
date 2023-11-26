@@ -40,9 +40,12 @@ with DAG(DAG_NAME,
     params_info = Variable.get(environment_variable_name, deserialize_json=True)
 
     # Building data frames
+
+    # Leagues URLs
     df = pd.read_csv(
         '/usr/local/airflow/dags/leagues_runner/resources/df_ligas.csv')
     
+
     df_team = pd.read_csv(
         '/usr/local/airflow/dags/leagues_runner/resources/team_table.csv')
 
@@ -67,7 +70,7 @@ with DAG(DAG_NAME,
 
         task_id='upload_data_stage',
         sql='./queries/upload_stage.sql',
-        snowflake_conn_id='snowflake_connection',
+        snowflake_conn_id='snow_conn',
         warehouse=params_info["DWH"],
         database=params_info["DB"],
         role=params_info["ROLE"],
@@ -77,7 +80,7 @@ with DAG(DAG_NAME,
 
         task_id='ingest_table',
         sql='./queries/upload_table.sql',
-        snowflake_conn_id='snowflake_connection',
+        snowflake_conn_id='snow_conn',
         warehouse=params_info["DWH"],
         database=params_info["DB"],
         role=params_info["ROLE"],
