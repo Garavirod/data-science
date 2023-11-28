@@ -1,8 +1,5 @@
-import json
 import boto3
-from datetime import datetime
 import os
-import numpy as np
 import requests
 import pandas as pd          
 import random
@@ -29,13 +26,13 @@ def handler(event, context):
 
     # Save into ephemeral temp
     date = pd.to_datetime('today').strftime('%Y%m%d')
-    file_name = f'youtube_stats_{date}.csv'
+    file_name = f'youtube_statistics_{date}.csv'
     file_path = f'/tmp/{file_name}'
     result.to_csv(file_path, index=False)
 
     # Save file into s3 destination
     s3 = boto3.resource('s3')
-    s3.Bucket(bucket_destination).upload_file(file_path, key=file_name)
+    s3.Bucket(bucket_destination).upload_file(file_path, Key=file_name)
 
     # Clear ephemeral temp
     os.remove(file_path)
