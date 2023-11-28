@@ -4,6 +4,8 @@ from aws_cdk import (
     aws_lambda as Lambda,
     Size,
     Duration,
+    aws_events as events,
+    aws_events_targets as targets
 )
 from constructs import Construct
 from dotenv import load_dotenv
@@ -33,6 +35,21 @@ class AwsStackStack(Stack):
 
         }
 
+        event_bridge_schedules = {
+            'youtube-analytics_cron':events.Rule(
+                self,
+                "Run Daily at 12:30 hrs UTC",
+                rule_name="youtube-analytics_cron",
+                schedule=events.Schedule.cron(
+                    hour='12',
+                    minute='30',
+                    week_day='*',
+                    month='*',
+                    year='*',
+                )
+            )
+        }
+
         handlers = {
             'youtube_analytics_handler': Lambda.Function(
                 self,
@@ -56,3 +73,8 @@ class AwsStackStack(Stack):
         # Grants lambda permissions
         buckets['input_bucket'].grant_read(handlers['youtube_analytics_handler'])
         buckets['output_bucket'].grant_write(handlers['youtube_analytics_handler'])
+
+        # Link event bridge to lambda handler
+        event_bridge_schedules['youtube-analytics_cron'].add_target(
+            targets.LambdaFunction(handler=handlers['youtube_analytics_handler'])
+        )
