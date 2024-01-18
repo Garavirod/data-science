@@ -1,0 +1,3 @@
+resources/*.pem
+resources/*.txt
+.env
