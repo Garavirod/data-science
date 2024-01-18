@@ -1,0 +1,6 @@
+{
+    "bootstrap.servers": "pkc-921jm.us-east-2.aws.confluent.cloud:9092",
+    "security.protocol": "SASL_SSL",
+    "sasl.mechanism": "PLAIN",
+    "sasl.jaas.config" : "org.apache.kafka.common.security.plain.PlainLoginModule required username='<>' password='<>';"
+}
