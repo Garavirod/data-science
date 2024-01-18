@@ -22,4 +22,4 @@ This project simulate user purchases in multiple categories in real time and use
 3. What’s the e-commerce category which more purchases in COMPLETED
 - ![image.png](./resources/query3.png)
 4. How many users made a more than two purchases
-![image.png](./resources/query4.png)
+- ![image.png](./resources/query4.png)
