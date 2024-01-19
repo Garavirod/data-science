@@ -9,3 +9,4 @@ This project simulate user purchases in real time and uses Kinesis for data inge
 
 ### Simulator script and where the data comes from - `purchase-simulator.py`
 
+### Queries on athena editor`queries.sql`
