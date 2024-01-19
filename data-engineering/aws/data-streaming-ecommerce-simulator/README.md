@@ -2,7 +2,7 @@
 
 ### Diagram
 
-![image.png](./resources/diagram.png)
+![image.png](./resources/Diagram.png)
 
 ### Practices description 
 This project simulate user purchases in real time and uses Kinesis for data ingest
