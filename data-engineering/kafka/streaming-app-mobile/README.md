@@ -12,6 +12,11 @@ This project simulate user purchases in multiple categories in real time and use
 [Installation and configurations](https://datexland.medium.com/how-to-deploy-apache-druid-on-aws-ec2-instance-50af955edef)
 
 
+### run druid 
+
+`./bin/start-micro-quickstart`
+
+
 ### Simulator script and where the data comes from - `e-commerce-kafka-user-interaction-app-simulation`
 
 
