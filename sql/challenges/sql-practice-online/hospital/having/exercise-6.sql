@@ -1,5 +1,5 @@
 /*
-
+Show the provinces that has more patients identified as 'M' than 'F'. Must only show full province_name
 */
 
 -- solution 1
