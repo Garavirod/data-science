@@ -1,3 +1,20 @@
+/*
+	Dimension tables
+
+	- Dates
+	- movies
+	- Customers
+	- Stores
+
+	We can obtain relevant info like
+
+	What were the movies with the max revenue
+	what was the city that gave the max/min revenue
+	What was the month with the max/min revenue..
+	The most popular movie by month...
+*/
+
+
 -- Dimension tables creation
 CREATE TABLE dimDate(
 	date_key integer NOT NULL PRIMARY KEY,
