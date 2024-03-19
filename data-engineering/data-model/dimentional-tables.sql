@@ -39,7 +39,7 @@ CREATE TABLE dimMovie
 	description text,
 	release_year year,
 	language varchar(20) NOT NULL,
-	original_languagee varchar(20),
+	original_language varchar(20),
 	rental_duration smallint NOT NULL,
 	length smallint NOT NULL,
 	rating varchar(5) NOT NULL,
@@ -61,6 +61,15 @@ CREATE TABLE dimStore
 	manager_last_name varchar(45) NOT NULL,
 	start_date date NOT NULL,
 	end_date date NOT NULL
+);
+
+CREATE TABLE factSales(
+	sales_key SERIAL PRIMARY KEY,
+	date_key integer REFERENCES dimDate(date_key),
+	customer_key integer REFERENCES dimCustomer(customer_key),
+	movie_key integer REFERENCES dimMovie(movie_key),
+	store_key integer REFERENCES dimStore(store_key),
+	sales_amount numeric
 );
 
 -- Getting information
@@ -154,3 +163,56 @@ inner join staff as ST on (S.manager_staff_id = ST.staff_id)
 inner join address as A on (S.address_id = A.address_id)
 inner join city as C on (A.city_id = C.city_id)
 inner join country as CO on (CO.country_id = C.country_id);
+
+
+INSERT INTO dimMovie (
+    movie_key,
+    film_id,
+    title,
+    description,
+    release_year,
+    language,
+    original_language,
+    rental_duration,
+    length,
+    rating,
+    special_features
+)
+select M.film_id as movie_key,
+M.film_id,
+M.title,
+M.description,
+M.release_year,
+L.name,
+L.name,
+M.rental_duration,
+M.length,
+M.rating,
+M.special_features
+FROM film as M
+inner join language AS L on (L.language_id = M.language_id);
+
+INSERT INTO factSales(
+    date_key,
+    customer_key,
+    movie_key,
+    store_key,
+    sales_amount
+)
+SELECT TO_CHAR(payment_date :: DATE, 'yyyMMDD') :: integer  as date_key,
+    P.customer_id as customer_key,
+    I.film_id as movie_key,
+    I.store_id as store_key,
+    P.amount as sales_amount
+FROM payment p
+inner join rental R on (P.rental_id = R.rental_id)
+inner join inventory I ON (i.inventory_id = R.inventory_id)
+
+-- Query from factsales
+SELECT dimMovie.title, dimDate.month, dimCustomer.city, sum(sales_amount) as revenue
+from factSales
+join dimMovie on (dimMovie.movie_key = factSales.movie_key)
+join dimDate on (dimDate.date_key = factSales.date_key)
+join dimCustomer on (dimCustomer.customer_key = factSales.customer_key)
+group by (dimMovie.title, dimDate.month,dimCustomer.city)
+order by dimMovie.title, dimDate.month, dimCustomer.city, revenue DESC;
