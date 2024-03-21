@@ -21,7 +21,7 @@ def main():
     # schemas
     vehicle_schema = StructType([
         StructField(name='id', dataType=StringType(), nullable=True),
-        StructField(name='device_id', dataType=StringType(), nullable=True),
+        StructField(name='deviceId', dataType=StringType(), nullable=True),
         StructField(name='timestamp', dataType=TimestampType(), nullable=True),
         StructField(name='location', dataType=StringType(), nullable=True),
         StructField(name='speed', dataType=DoubleType(), nullable=True),
@@ -30,6 +30,50 @@ def main():
         StructField(name='make', dataType=StringType(), nullable=True),
         StructField(name='year', dataType=IntegerType(), nullable=True),
         StructField(name='fuelType', dataType=StringType(), nullable=True),
+    ])
+
+    gps_schema = StructType([
+        StructField(name='id', dataType=StringType(), nullable=True),
+        StructField(name='deviceId', dataType=StringType(), nullable=True),
+        StructField(name='timestamp', dataType=TimestampType(), nullable=True),
+        StructField(name='speed', dataType=DoubleType(), nullable=True),
+        StructField(name='direction', dataType=StringType(), nullable=True),
+        StructField(name='vehicleType', dataType=StringType(), nullable=True),
+    ])
+
+    traffic_camera_schema = StructType([
+        StructField(name='id', dataType=StringType(), nullable=True),
+        StructField(name='deviceId', dataType=StringType(), nullable=True),
+        StructField(name='cameraId', dataType=StringType(), nullable=True),
+        StructField(name='timestamp', dataType=TimestampType(), nullable=True),
+        StructField(name='location', dataType=StringType(), nullable=True),
+        StructField(name='snapshot', dataType=StringType(), nullable=True),
+    ])
+
+    weather_schema = StructType([
+        StructField(name='id', dataType=StringType(), nullable=True),
+        StructField(name='deviceId', dataType=StringType(), nullable=True),
+        StructField(name='timestamp', dataType=TimestampType(), nullable=True),
+        StructField(name='temperature', dataType=DoubleType(), nullable=True),
+        StructField(name='weatherCondition',
+                    dataType=StringType(), nullable=True),
+        StructField(name='precipitation',
+                    dataType=DoubleType(), nullable=True),
+        StructField(name='windSpeed', dataType=DoubleType(), nullable=True),
+        StructField(name='humidity', dataType=IntegerType(), nullable=True),
+        StructField(name='airQualityIndex',
+                    dataType=IntegerType(), nullable=True),
+    ])
+
+    emergency_schema = StructType([
+        StructField(name='id', dataType=StringType(), nullable=True),
+        StructField(name='deviceId', dataType=StringType(), nullable=True),
+        StructField(name='timestamp', dataType=TimestampType(), nullable=True),
+        StructField(name='location', dataType=StringType(), nullable=True),
+        StructField(name='incidentId', dataType=StringType(), nullable=True),
+        StructField(name='type', dataType=StringType(), nullable=True),
+        StructField(name='status', dataType=StringType(), nullable=True),
+        StructField(name='description', dataType=StringType(), nullable=True),
     ])
 
 

@@ -137,7 +137,7 @@ def generate_vehicle_data(device_id):
     location = simulate_vehicle_movement()
     return {
         'id': uuid.uuid4(),
-        'device_id': device_id,
+        'deviceId': device_id,
         'timestamp': get_next_time().isoformat(),
         'location': (location['latitude'], location['longitude']),
         'speed': random.uniform(a=10, b=40),
