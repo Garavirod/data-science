@@ -6,6 +6,7 @@ from datetime import datetime
 import random
 import uuid
 from datetime import timedelta
+import time
 
 CDMX_COORDS = {
     "latitude": 19.365713,
@@ -109,6 +110,8 @@ def produce_data_to_kafka(producer: Producer, topic, data):
         on_delivery=delivery_report
     )
 
+    producer.flush()
+
 
 def get_next_time():
     global start_time
@@ -158,6 +161,11 @@ def simulate_journey(producer, device_id):
         emergency_incident_data = generate_emergency_incident_data(
             device_id=device_id, timestamp=vehicle_data['timestamp'], location=vehicle_data['location'])
 
+
+        if(vehicle_data['location'][0] >= SAN_JUAN_TABLAS_COORDS['latitude'] and vehicle_data[1] <= SAN_JUAN_TABLAS_COORDS['longitude']):
+            print('Vehicle has reached out SAN_JUAN_TABLAS. Simulation ending...')
+            break
+
         # Send data to kafka topics
 
         produce_data_to_kafka(
@@ -171,12 +179,9 @@ def simulate_journey(producer, device_id):
         produce_data_to_kafka(
             producer=producer, topic=EMERGENCY_TOPIC, data=emergency_incident_data)
 
-        print(vehicle_data)
-        print(gps_data)
-        print(traffic_camera_data)
-        print(weather_data)
-        print(emergency_incident_data)
-        break
+        time.sleep(5)
+        
+        
 
 
 if __name__ == "__main__":
