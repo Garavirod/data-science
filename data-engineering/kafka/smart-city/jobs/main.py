@@ -1,5 +1,5 @@
 import os
-from confluent_kafka import SerializingProducer
+from confluent_kafka import SerializingProducer, Producer
 import simplejson as json
 import pyspark
 from datetime import datetime
@@ -87,6 +87,29 @@ def generate_emergency_incident_data(device_id, timestamp, location):
     }
 
 
+def verify_data_serialized(obj):
+    if isinstance(obj, uuid.UUID):
+        return str(obj)
+    raise TypeError(
+        f'Object of type {obj.__class__.__name__} is not serializable')
+
+
+def delivery_report(err, msg):
+    if err is not None:
+        print(f'Message delivery failed {err}')
+    else:
+        print(f'Message delivered to {msg.topic()}[{msg.partition()}]')
+
+
+def produce_data_to_kafka(producer: Producer, topic, data):
+    producer.produce(
+        topic,
+        key=str(data['id']),
+        value=json.dumps(data, default=verify_data_serialized).encode('utf-8'),
+        on_delivery=delivery_report
+    )
+
+
 def get_next_time():
     global start_time
     # update frequency
@@ -134,6 +157,19 @@ def simulate_journey(producer, device_id):
             device_id, vehicle_data['timestamp'], vehicle_data['location'])
         emergency_incident_data = generate_emergency_incident_data(
             device_id=device_id, timestamp=vehicle_data['timestamp'], location=vehicle_data['location'])
+
+        # Send data to kafka topics
+
+        produce_data_to_kafka(
+            producer=producer, topic=VEHICLE_TOPIC, data=vehicle_data)
+        produce_data_to_kafka(
+            producer=producer, topic=GPS_TOPIC, data=gps_data)
+        produce_data_to_kafka(
+            producer=producer, topic=TRAFFIC_TOPIC, data=traffic_camera_data)
+        produce_data_to_kafka(
+            producer=producer, topic=WEATHER_TOPIC, data=weather_data)
+        produce_data_to_kafka(
+            producer=producer, topic=EMERGENCY_TOPIC, data=emergency_incident_data)
 
         print(vehicle_data)
         print(gps_data)
