@@ -1,7 +1,6 @@
 import os
 from confluent_kafka import SerializingProducer, Producer
 import simplejson as json
-import pyspark
 from datetime import datetime
 import random
 import uuid
