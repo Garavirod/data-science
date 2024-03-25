@@ -114,7 +114,7 @@ def main():
         'emergency_data', emergency_schema).alias('emergency')
 
     # Joining Data frames by id and timestamp
-    bucket_name = 'dev-spk-streaming'
+    bucket_name = 'dev-spk-streaming-data'
 
     query1 = stream_writer(input=vehicle_df,
                   checkpointFolder=f's3a://{bucket_name}/checkpoints/vehicle_data',
