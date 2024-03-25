@@ -26,4 +26,4 @@ docker exec  -it smart-city-spark-master-1 spark-submit --master spark://spark-m
 
 
 References: 
-(Smart city kafka streaming)[https://www.youtube.com/watch?v=Vv_fvwF41_0]
+- [Smart city kafka streaming](https://www.youtube.com/watch?v=Vv_fvwF41_0)
