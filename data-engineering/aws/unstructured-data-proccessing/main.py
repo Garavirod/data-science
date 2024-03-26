@@ -1,7 +1,8 @@
 from pyspark.sql import SparkSession
 from config.config import configuration
-from pyspark.sql import StructType, StructField, StringType, IntegerType, TimestampType, DoubleType, DateType
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, TimestampType, DoubleType, DateType
 from udf_utils import *
+from pyspark.sql.functions import udf
 
 
 def define_udfs():
@@ -39,19 +40,19 @@ if __name__ == '__main__':
              .getOrCreate()
              )
 
-    text_input_dir = 'file://C:\Users\user\Documents\data-science\data-engineering\aws\unstructured-data-proccessing\input\input_text'
-    csv_input_dir = 'file://C:\Users\user\Documents\data-science\data-engineering\aws\unstructured-data-proccessing\input\input_csv'
-    json_input_dir = 'file://C:\Users\user\Documents\data-science\data-engineering\aws\unstructured-data-proccessing\input\input_json'
-    pdf_input_dir = 'file://C:\Users\user\Documents\data-science\data-engineering\aws\unstructured-data-proccessing\input\input_pdf'
-    video_input_dir = 'file://C:\Users\user\Documents\data-science\data-engineering\aws\unstructured-data-proccessing\input\input_video'
-    img_input_dir = 'file://C:\Users\user\Documents\data-science\data-engineering\aws\unstructured-data-proccessing\input\input_img'
+    text_input_dir = 'file://C:/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_text'
+    csv_input_dir = 'file://C:/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_csv'
+    json_input_dir = 'file://C:/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_json'
+    pdf_input_dir = 'file://C:/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_pdf'
+    video_input_dir = 'file://C:/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_video'
+    img_input_dir = 'file://C:/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_img'
 
     # Data schema definition
 
     data_schema = StructType([
         StructField('file_name',StringType(), True),
         StructField('position',StringType(), True),
-        StructField('classcode',StringType(), True),
+        StructField('class_code',StringType(), True),
         StructField('salary_start',DoubleType(), True),
         StructField('salary_end',DoubleType(), True),
         StructField('start_date',DateType(), True),
@@ -70,3 +71,19 @@ if __name__ == '__main__':
 
     udf = define_udfs()
 
+    job_bulletin_df = (
+        spark.readSream
+        .format('text')
+        .option('wholetext','true')
+        .load(text_input_dir)
+    )
+
+    query = (
+        job_bulletin_df
+        .writeStream
+        .outputMode('append')
+        .format('console')
+        .start()
+    )
+
+    query.awaitTermination()

@@ -4,7 +4,7 @@ x-spark-common: &spark-common
   image: bitnami/spark:latest
   volumes:
     - ./jobs:/opt/bitnamic/spark/jobs
-  command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:70777
+  command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
   depends_on: 
     - spark-master
   environment:
