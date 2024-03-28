@@ -39,12 +39,12 @@ if __name__ == '__main__':
         .config('spark.hadoop.fs.s3a.aws.credentials.provider', 'org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider')\
         .getOrCreate()
 
-    text_input_dir = 'file:///Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_text'
-    csv_input_dir = 'file:///C:/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_csv'
-    json_input_dir = 'file:///C:/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_json'
-    pdf_input_dir = 'file:///C:/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_pdf'
-    video_input_dir = 'file:///C:/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_video'
-    img_input_dir = 'file:///C:/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_img'
+    text_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_text'
+    csv_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_csv'
+    json_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_json'
+    pdf_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input/input_pdf'
+    video_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_video'
+    img_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_img'
 
     # Data schema definition
 
@@ -81,6 +81,7 @@ if __name__ == '__main__':
         .writeStream
         .outputMode('append')
         .format('console')
+        .option('truncate',False)
         .start()
     )
 
