@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 from config.config import configuration
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, TimestampType, DoubleType, DateType
 from udf_utils import *
-from pyspark.sql.functions import udf
+from pyspark.sql.functions import udf, regexp_replace
 
 
 def define_udfs():
@@ -28,16 +28,16 @@ def define_udfs():
 
 
 if __name__ == '__main__':
-    spark = SparkSession.builder.appName('AWS_Spark_Unstructured')\
-        .config(
-        'spark.jars.packages',
-        "org.apache.hadoop:hadoop-aws:3.3.1,"
-        "com.amazonaws:aws-java-sdk:1.11.469")\
-        .config('spark.hadoop.fs.s3a.impl', 'org.apache.hadoop.fs.s3a.S3AFileSystem')\
-        .config('spark.hadoop.fs.s3a.access.key', configuration.get('AWS_ACCESS_KEY'))\
-        .config('spark.hadoop.fs.s3a.secret.key', configuration.get('AWS_SECRET_KEY'))\
-        .config('spark.hadoop.fs.s3a.aws.credentials.provider', 'org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider')\
-        .getOrCreate()
+    spark = (SparkSession.builder.appName('AWS_Spark_Unstructured')
+             # .config(
+             # 'spark.jars.packages',
+             # "org.apache.hadoop:hadoop-aws:3.3.1,"
+             # "com.amazonaws:aws-java-sdk:1.11.469")
+             .config('spark.hadoop.fs.s3a.impl', 'org.apache.hadoop.fs.s3a.S3AFileSystem')
+             .config('spark.hadoop.fs.s3a.access.key', configuration.get('AWS_ACCESS_KEY'))
+             .config('spark.hadoop.fs.s3a.secret.key', configuration.get('AWS_SECRET_KEY'))
+             .config('spark.hadoop.fs.s3a.aws.credentials.provider', 'org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider')
+             .getOrCreate())
 
     text_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_text'
     csv_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_csv'
@@ -67,7 +67,7 @@ if __name__ == '__main__':
         StructField('application_location', StringType(), True),
     ])
 
-    udf = define_udfs()
+    defined_functions = define_udfs()
 
     job_bulletin_df = (
         spark.readStream
@@ -76,12 +76,61 @@ if __name__ == '__main__':
         .load(text_input_dir)
     )
 
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'file_name',
+        regexp_replace(
+            defined_functions['extract_file_name_udf']('value'),
+            r'\r',
+            ' '
+        )
+    )
+
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'value',
+        regexp_replace(
+            'value',
+            r'\n',
+            ' '
+        )
+    )
+
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'position',
+        regexp_replace(
+            defined_functions['extract_position_udf']('value'),
+            r'\r', 
+            ' '
+        )
+    )
+
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'salary',
+        defined_functions['extract_salary_udf']('value')
+    ).getField('salary_start')
+
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'salary',
+        defined_functions['extract_salary_udf']('value')
+    ).getField('salary_end')
+
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'start_date',
+        defined_functions['extract_date_udf']('value')
+    )
+
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'end_date',
+        defined_functions['extract_end_date_udf']('value')
+    )
+
+    j_df = job_bulletin_df.select('file_name', 'start_date', 'end_date')
+
     query = (
-        job_bulletin_df
+        j_df
         .writeStream
         .outputMode('append')
         .format('console')
-        .option('truncate',False)
+        .option('truncate', False)
         .start()
     )
 
