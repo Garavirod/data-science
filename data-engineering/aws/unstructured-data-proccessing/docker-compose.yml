@@ -3,7 +3,7 @@ version: '3'
 x-spark-common: &spark-common
   image: bitnami/spark:latest
   volumes:
-    - ./jobs:/opt/bitnamic/spark/jobs
+    - ./jobs:/opt/bitnami/spark/jobs
   command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
   depends_on: 
     - spark-master
