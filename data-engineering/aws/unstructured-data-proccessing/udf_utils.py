@@ -47,7 +47,19 @@ def extract_end_date(file_content: str):
     return end_date
 
 def extract_salary(file_content: str):
-    pass
+    try:
+        salary_pattern = r'\$\d{1,3}(?:,\d{3})* to \$\d{1,3}(?:,\d{3})*'
+        salary_match = re.search(salary_pattern, file_content)
+        if salary_match:
+            salary_start = float(salary_match.group(1).replace(',',''))
+            salary_end = float(salary_match.group(4).replace(',','')) if salary_match.group(4) else \
+            float(salary_match.group(2).replace(',',''))
+        else:
+            salary_start, salary_end = None, None
+        
+        return salary_start, salary_end
+    except Exception as e:
+        raise ValueError(f'Error extracting salary: {str(e)}')
 
 
 def extract_requirements(file_Content: str):

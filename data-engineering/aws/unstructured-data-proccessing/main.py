@@ -104,14 +104,14 @@ if __name__ == '__main__':
     )
 
     job_bulletin_df = job_bulletin_df.withColumn(
-        'salary',
-        defined_functions['extract_salary_udf']('value')
-    ).getField('salary_start')
+        'salary_start',
+        defined_functions['extract_salary_udf']('value').getField('salary_start')
+    )
 
     job_bulletin_df = job_bulletin_df.withColumn(
-        'salary',
-        defined_functions['extract_salary_udf']('value')
-    ).getField('salary_end')
+        'salary_end',
+        defined_functions['extract_salary_udf']('value').getField('salary_end')
+    )
 
     job_bulletin_df = job_bulletin_df.withColumn(
         'start_date',
@@ -123,7 +123,7 @@ if __name__ == '__main__':
         defined_functions['extract_end_date_udf']('value')
     )
 
-    j_df = job_bulletin_df.select('file_name', 'start_date', 'end_date')
+    j_df = job_bulletin_df.select('file_name', 'start_date', 'end_date','salary_end','salary_start')
 
     query = (
         j_df
