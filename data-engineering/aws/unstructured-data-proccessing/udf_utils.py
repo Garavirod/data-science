@@ -16,7 +16,7 @@ def extract_position(file_content: str):
 
 def extract_class_code(file_content: str):
     try:
-        class_code_match = re.search(r'(Class code:)\s+(\d+)', file_content)
+        class_code_match = re.search(r'(Class [Cc]ode:)\s+(\d+)', file_content)
         class_code = class_code_match.group(2) if class_code_match else None
         return class_code
     except Exception as e:
@@ -72,7 +72,7 @@ def extract_salary(file_content: str):
 def extract_requirements(file_Content: str):
     try:
         requirements_match = re.search(
-            r'(REQUIREMENTS?\S?MINIMUM QUALIFICATIONS?)(.*)(PROCESS NOTES?)',
+            r'(REQUIREMENT?\s?MINIMUM QUALIFICATIONS?)(.*)(PROCESS NOTES?)',
             file_Content,
             re.DOTALL
         )

@@ -15,7 +15,7 @@ def define_udfs():
         ])),
         'extract_date_udf': udf(extract_start_date, DateType()),
         'extract_end_date_udf': udf(extract_end_date, DateType()),
-        'extract_class_encode_udf': udf(extract_class_code, StringType()),
+        'extract_class_code_udf': udf(extract_class_code, StringType()),
         'extract_requirements_udf': udf(extract_requirements, StringType()),
         'extract_notes_udf': udf(extract_notes, StringType()),
         'extract_duties_udf': udf(extract_duties, StringType()),
@@ -98,14 +98,15 @@ if __name__ == '__main__':
         'position',
         regexp_replace(
             defined_functions['extract_position_udf']('value'),
-            r'\r', 
+            r'\r',
             ' '
         )
     )
 
     job_bulletin_df = job_bulletin_df.withColumn(
         'salary_start',
-        defined_functions['extract_salary_udf']('value').getField('salary_start')
+        defined_functions['extract_salary_udf'](
+            'value').getField('salary_start')
     )
 
     job_bulletin_df = job_bulletin_df.withColumn(
@@ -122,8 +123,53 @@ if __name__ == '__main__':
         'end_date',
         defined_functions['extract_end_date_udf']('value')
     )
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'class_code',
+        defined_functions['extract_class_code_udf']('value')
+    )
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'requirements',
+        defined_functions['extract_requirements_udf']('value')
+    )
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'notes',
+        defined_functions['extract_notes_udf']('value')
+    )
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'duties',
+        defined_functions['extract_duties_udf']('value')
+    )
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'selection',
+        defined_functions['extract_selection_udf']('value')
+    )
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'experience_length',
+        defined_functions['extract_experience_length_udf']('value')
+    )
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'eduction_length',
+        defined_functions['extract_education_length_udf']('value')
+    )
+    job_bulletin_df = job_bulletin_df.withColumn(
+        'application_location',
+        defined_functions['extract_application_location_udf']('value')
+    )
 
-    j_df = job_bulletin_df.select('file_name', 'start_date', 'end_date','salary_start','salary_end')
+    j_df = job_bulletin_df\
+        .select('file_name',
+                'start_date',
+                'end_date',
+                'salary_start',
+                'salary_end',
+                'class_code',
+                'requirements',
+                'notes',
+                'duties',
+                'selection',
+                'experience_length',
+                'eduction_length',
+                'application_location')
 
     query = (
         j_df
