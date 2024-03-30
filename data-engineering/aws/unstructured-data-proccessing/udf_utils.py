@@ -48,12 +48,12 @@ def extract_end_date(file_content: str):
 
 def extract_salary(file_content: str):
     try:
-        salary_pattern = r'\$\d{1,3}(?:,\d{3})* to \$\d{1,3}(?:,\d{3})*'
-        salary_match = re.search(salary_pattern, file_content)
-        if salary_match:
-            salary_start = float(salary_match.group(1).replace(',',''))
-            salary_end = float(salary_match.group(4).replace(',','')) if salary_match.group(4) else \
-            float(salary_match.group(2).replace(',',''))
+        salary_pattern = r'(\$[0-9,]+ to \$[0-9,]+)(?:;|$)'
+        salary_matches = re.findall(salary_pattern, file_content)
+
+        if len(salary_matches)  > 0:
+            salary_start = float(salary_matches[0].replace(',','').replace('$','').split('to')[0])
+            salary_end = float(salary_matches[-1].replace(',','').replace('$','').split('to')[0])
         else:
             salary_start, salary_end = None, None
         

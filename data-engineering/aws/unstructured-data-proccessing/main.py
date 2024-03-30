@@ -123,7 +123,7 @@ if __name__ == '__main__':
         defined_functions['extract_end_date_udf']('value')
     )
 
-    j_df = job_bulletin_df.select('file_name', 'start_date', 'end_date','salary_end','salary_start')
+    j_df = job_bulletin_df.select('file_name', 'start_date', 'end_date','salary_start','salary_end')
 
     query = (
         j_df
