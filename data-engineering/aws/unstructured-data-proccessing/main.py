@@ -3,6 +3,7 @@ from config.config import configuration
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, TimestampType, DoubleType, DateType
 from udf_utils import *
 from pyspark.sql.functions import udf, regexp_replace
+from pyspark.sql.dataframe import DataFrame
 
 
 def define_udfs():
@@ -191,13 +192,29 @@ if __name__ == '__main__':
 
     union_data_frame = job_bulletin_df.union(json_df)
 
-    query = (
-        union_data_frame
-        .writeStream
-        .outputMode('append')
-        .format('console')
-        .option('truncate', False)
-        .start()
-    )
+    def stream_writer(input: DataFrame, checkpoint_folder, output):
+        return (
+            input.writeStream
+            .format('parquet')
+            .option(key='checkpointLocation', value=checkpoint_folder)
+            .option(key='path', value=output)
+            .outputMode('append')
+            .trigger(processingTime='5 seconds')
+            .start()
+        )
+
+    # query = (
+    #     union_data_frame
+    #     .writeStream
+    #     .outputMode('append')
+    #     .format('console')
+    #     .option('truncate', False)
+    #     .start()
+    # )
+
+    query = stream_writer(
+        input=union_data_frame, 
+        checkpoint_folder=configuration.get('INPUT_FILE'), 
+        output='OUTPUT_FILES')
 
     query.awaitTermination()
