@@ -30,22 +30,31 @@ def define_udfs():
 
 if __name__ == '__main__':
     spark = (SparkSession.builder.appName('AWS_Spark_Unstructured')
-             # .config(
-             # 'spark.jars.packages',
-             # "org.apache.hadoop:hadoop-aws:3.3.1,"
-             # "com.amazonaws:aws-java-sdk:1.11.469")
+             .config(
+             'spark.jars.packages',
+             "org.apache.hadoop:hadoop-aws:3.3.1,"
+             "com.amazonaws:aws-java-sdk:1.11.469")
              .config('spark.hadoop.fs.s3a.impl', 'org.apache.hadoop.fs.s3a.S3AFileSystem')
              .config('spark.hadoop.fs.s3a.access.key', configuration.get('AWS_ACCESS_KEY'))
              .config('spark.hadoop.fs.s3a.secret.key', configuration.get('AWS_SECRET_KEY'))
              .config('spark.hadoop.fs.s3a.aws.credentials.provider', 'org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider')
              .getOrCreate())
 
-    text_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_text'
-    csv_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_csv'
-    json_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_json'
-    pdf_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input/input_pdf'
-    video_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_video'
-    img_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_img'
+    # For local debugging
+    # text_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_text'
+    # csv_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_csv'
+    # json_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_json'
+    # pdf_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input/input_pdf'
+    # video_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_video'
+    # img_input_dir = 'file:////mnt/c/Users/user/Documents/data-science/data-engineering/aws/unstructured-data-proccessing/input/input_img'
+
+    # For cluster workers debugging
+    text_input_dir = 'file:///opt/bitnami/spark/jobs/input/input_text'
+    csv_input_dir = 'file:///opt/bitnami/spark/jobs/input/input_csv'
+    json_input_dir = 'file:///opt/bitnami/spark/jobs/input/input_json'
+    pdf_input_dir = 'file:///opt/bitnami/spark/jobs/input/input_pdf'
+    video_input_dir = 'file:///opt/bitnami/spark/jobs/input/input_video'
+    img_input_dir = 'file:///opt/bitnami/spark/jobs/input/input_img'
 
     # Data schema definition
 
