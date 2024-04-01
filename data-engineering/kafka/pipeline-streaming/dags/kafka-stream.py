@@ -3,10 +3,11 @@ from datetime import datetime
 # from airflow.operators.python import PythonOperator
 import json
 import requests
+from kafka import KafkaProducer
 
 default_args = {
     'owner': 'airscholar',
-    'start_date':datetime(2023, 8, 3, 10,00)
+    'start_date': datetime(2023, 8, 3, 10, 00)
 }
 
 
@@ -16,12 +17,13 @@ def get_data():
     res = res['results'][0]
     return res
 
-def format_data(res:dict):
+
+def format_data(res: dict):
     data = {}
     location = res['location']
-    data['first_name'] =  res['name']['first']
-    data['last_name'] =  res['name']['last']
-    data['gender'] =  res['gender']
+    data['first_name'] = res['name']['first']
+    data['last_name'] = res['name']['last']
+    data['gender'] = res['gender']
     data['address'] = f"{location['street']['number']} {location['street']['name']} {location['city']} {location['state']} {location['country']}"
     data['postcode'] = location['postcode']
     data['email'] = res['email']
@@ -32,10 +34,15 @@ def format_data(res:dict):
     data['picture'] = res['picture']['medium']
     return data
 
+
 def stream_data():
     data = get_data()
-    res = format_data(res=data)
-    print(res)
+    data = format_data(res=data)
+    producer = KafkaProducer(
+        bootstrap_servers=['localhost:9092'], max_block_ms=5000)
+    topic = 'users_created'
+    producer.send(topic=topic, value=json.dumps(data).encode('utf-8'))
+
 
 # DAG definitions
 """ with DAG('user_automation',
