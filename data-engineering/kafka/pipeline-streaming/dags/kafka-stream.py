@@ -1,9 +1,11 @@
 from datetime import datetime
-# from airflow import DAG
-# from airflow.operators.python import PythonOperator
+from airflow import DAG
+from airflow.operators.python import PythonOperator
 import json
 import requests
 from kafka import KafkaProducer
+import time
+import logging
 
 default_args = {
     'owner': 'airscholar',
@@ -36,23 +38,29 @@ def format_data(res: dict):
 
 
 def stream_data():
-    data = get_data()
-    data = format_data(res=data)
     producer = KafkaProducer(
-        bootstrap_servers=['localhost:9092'], max_block_ms=5000)
+        bootstrap_servers=['broker:29092'], max_block_ms=5000)
     topic = 'users_created'
-    producer.send(topic=topic, value=json.dumps(data).encode('utf-8'))
+    curr_time = time.time()
+    while True:
+        if time.time() > curr_time + 60:  # 1
+            break
+        try:
+            data = get_data()
+            data = format_data(res=data)
+            producer.send(topic=topic, value=json.dumps(data).encode('utf-8'))
+        except Exception as e:
+            logging.error(f'An error ocurred >: {e}')
+            continue
 
 
 # DAG definitions
-""" with DAG('user_automation',
+with DAG('user_automation',
          default_args=default_args,
          schedule_interval='@daily',
          catchup=False) as dag:
-    
+
     streaming_tasks = PythonOperator(
         task_id='stream_data_from_api',
         python_callable=stream_data
     )
- """
-stream_data()
