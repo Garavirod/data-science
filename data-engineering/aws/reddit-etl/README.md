@@ -3,7 +3,7 @@
 
 ### Architecture diagram
 
-<img src="./resources/RedditDataEngineering.png"
+<img src="./resources/RedditDataEngineering.png"/>
 
 ### References
 
