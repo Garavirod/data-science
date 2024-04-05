@@ -26,7 +26,7 @@ dag = DAG(
 )
 
 # extraction from reddit
-extract = PythonOperator(
+reddit_data_extract = PythonOperator(
     task_id='reddit_extraction',
     python_callable=reddit_pipeline,
     op_kwargs={
@@ -45,4 +45,4 @@ upload_s3 = PythonOperator(
     dag=dag
 )
 
-extract >> upload_s3
+reddit_data_extract >> upload_s3

@@ -1,0 +1,30 @@
+id,title,score,num_comments,author,created_utc,url,over_18,edited,spoiler,stickied
+1bwggc7,8 Billion Files,44,55,__mifflinPaper,2024-04-05 12:11:50,https://www.reddit.com/r/dataengineering/comments/1bwggc7/8_billion_files/,False,False,False,False
+1bwbi9l,SQL Warehouse after Medallion architecture?,16,21,Wide-Recognition-607,2024-04-05 06:52:21,https://www.reddit.com/r/dataengineering/comments/1bwbi9l/sql_warehouse_after_medallion_architecture/,False,False,False,False
+1bwev6a,A beginner’s question?,16,30,RemarkableBat6004,2024-04-05 10:41:20,https://www.reddit.com/r/dataengineering/comments/1bwev6a/a_beginners_question/,False,False,False,False
+1bwg2f9,Concurrency vs Parallelism,13,8,GameFitAverage,2024-04-05 11:51:36,https://www.reddit.com/r/dataengineering/comments/1bwg2f9/concurrency_vs_parallelism/,False,False,False,False
+1bwdzrh,PySpark query ,10,8,GuardObjective9018,2024-04-05 09:45:21,https://www.reddit.com/r/dataengineering/comments/1bwdzrh/pyspark_query/,False,False,False,False
+1bwsf3e,Data Engineers - What has been you favorite job and why?,8,19,Novel-Tree7557,2024-04-05 20:38:07,https://www.reddit.com/r/dataengineering/comments/1bwsf3e/data_engineers_what_has_been_you_favorite_job_and/,False,False,False,False
+1bwje8v,Cons of using ChatGPT,8,20,iaxthepaladin,2024-04-05 14:26:32,https://www.reddit.com/r/dataengineering/comments/1bwje8v/cons_of_using_chatgpt/,False,False,False,False
+1bwfahn,Cube Alternatives,3,12,Sea_Draft_4623,2024-04-05 11:07:10,https://www.reddit.com/r/dataengineering/comments/1bwfahn/cube_alternatives/,False,False,False,False
+1bwgvdh,Neo4j vs Neptunedb ,3,1,jorgemaagomes,2024-04-05 12:32:53,https://www.reddit.com/r/dataengineering/comments/1bwgvdh/neo4j_vs_neptunedb/,False,False,False,False
+1bwe45e,Microsoft BI stack performance issues,3,17,msugenius,2024-04-05 09:53:44,https://www.reddit.com/r/dataengineering/comments/1bwe45e/microsoft_bi_stack_performance_issues/,False,False,False,False
+1bw45ji,Automating Seeds / Hardcoded values?,3,1,Clewdo,2024-04-05 00:35:46,https://www.reddit.com/r/dataengineering/comments/1bw45ji/automating_seeds_hardcoded_values/,False,False,False,False
+1bwo6vn,How do you write a data contract?,2,2,Mysterious-Coat5856,2024-04-05 17:43:07,https://www.reddit.com/r/dataengineering/comments/1bwo6vn/how_do_you_write_a_data_contract/,False,False,False,False
+1bwj4kk,Multithreading on Python ETL,2,18,mate-y-donSatur,2024-04-05 14:15:11,https://www.reddit.com/r/dataengineering/comments/1bwj4kk/multithreading_on_python_etl/,False,False,False,False
+1bwdj8p,Looking for a simple way to manage data ,2,1,Chillnesss,2024-04-05 09:13:59,https://www.reddit.com/r/dataengineering/comments/1bwdj8p/looking_for_a_simple_way_to_manage_data/,False,False,False,False
+1bw0ft8,Keeping processor's state on nifi upgrade,2,1,astolfo_hue,2024-04-04 22:03:49,https://www.reddit.com/r/dataengineering/comments/1bw0ft8/keeping_processors_state_on_nifi_upgrade/,False,False,False,False
+1bwsy73,How often do you need to wear multiple hats?,1,2,Puzzleheaded_Car_987,2024-04-05 20:59:55,https://www.reddit.com/r/dataengineering/comments/1bwsy73/how_often_do_you_need_to_wear_multiple_hats/,False,False,False,False
+1bwsr53,Google Professional Data Engineer exam preparation course,1,1,Ivan_GL7,2024-04-05 20:51:51,https://www.reddit.com/r/dataengineering/comments/1bwsr53/google_professional_data_engineer_exam/,False,False,False,False
+1bwpbhp,Data Architecture Patterns,1,2,nikeita,2024-04-05 18:29:10,https://www.reddit.com/r/dataengineering/comments/1bwpbhp/data_architecture_patterns/,False,False,False,False
+1bwp9oj,Best developer-friendly hosted Postgres service in 2024?,1,2,yingjunwu,2024-04-05 18:27:09,https://www.reddit.com/r/dataengineering/comments/1bwp9oj/best_developerfriendly_hosted_postgres_service_in/,False,False,False,False
+1bwle0a,MongoDB -> Braze Integration,1,0,lauragmukh,2024-04-05 15:48:38,https://www.reddit.com/r/dataengineering/comments/1bwle0a/mongodb_braze_integration/,False,False,False,False
+1bwj0ct,Snowflake Upsert on Snaplogic slower than normal?,1,0,South_Gap7688,2024-04-05 14:10:08,https://www.reddit.com/r/dataengineering/comments/1bwj0ct/snowflake_upsert_on_snaplogic_slower_than_normal/,False,False,False,False
+1bwisvs,Is there a way to go around dbt Metricflow  limitations? ,1,0,jutogashi,2024-04-05 14:01:10,https://www.reddit.com/r/dataengineering/comments/1bwisvs/is_there_a_way_to_go_around_dbt_metricflow/,False,False,False,False
+1bwi5ge,Building a simple data cleaning application with Desbordante,1,0,congolomera,2024-04-05 13:33:06,https://www.reddit.com/r/dataengineering/comments/1bwi5ge/building_a_simple_data_cleaning_application_with/,False,False,False,False
+1bw6cd1,Expectations of a Data Engineering Team?,1,0,Accomplished_Rest907,2024-04-05 02:13:33,https://www.reddit.com/r/dataengineering/comments/1bw6cd1/expectations_of_a_data_engineering_team/,False,False,False,False
+1bwts23,Loading JSON to BigQuery,1,0,dgautyaIO,2024-04-05 21:32:42,https://www.reddit.com/r/dataengineering/comments/1bwts23/loading_json_to_bigquery/,False,False,False,False
+1bwt8e4,Basic question on Delta Lake and CDC.,0,0,scht1980,2024-04-05 21:11:00,https://www.reddit.com/r/dataengineering/comments/1bwt8e4/basic_question_on_delta_lake_and_cdc/,False,False,False,False
+1bwq9po,H5 to Parquet or some other format,0,0,ThickAd5350,2024-04-05 19:08:54,https://www.reddit.com/r/dataengineering/comments/1bwq9po/h5_to_parquet_or_some_other_format/,False,False,False,False
+1bwlcig,Two part-time internships at the same time.,0,2,Immediate-Reward-287,2024-04-05 15:46:52,https://www.reddit.com/r/dataengineering/comments/1bwlcig/two_parttime_internships_at_the_same_time/,False,False,False,False
+1bwl1ts,Is This All a Data Lake Is?,0,3,Alwaysragestillplay,2024-04-05 15:34:50,https://www.reddit.com/r/dataengineering/comments/1bwl1ts/is_this_all_a_data_lake_is/,False,False,False,False
