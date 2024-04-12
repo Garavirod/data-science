@@ -1,6 +1,5 @@
-
-import random
 from utils.utils import set_random_date
+import random
 from etl.extract.data_extraction import fetch_random_book
 from etl.transform.transformations import set_exchange_usd_to_mxn
 import uuid
@@ -10,18 +9,17 @@ import json
 
 TOPIC = 'books_purchasing'
 KAFKA_PRODUCER = KafkaProducer(
-        bootstrap_servers=[],
-        max_block_ms=5000
-    )
+    bootstrap_servers=['localhost:9092'],
+    max_block_ms=5000
+)
 
 
-def simulate_book_purchases(users_list: list, num_simulations:int):
+def simulate_book_purchases(users_list: list, num_simulations: int):
     """  
     Simulates the fake user books purchasing like if the users did from its device (IOS, Android or Web) app.
     Data purchase is sent into a kafka topic by a producer.
     """
-    
-    
+
     if not users_list:
         print("No users available for purchase")
         return
@@ -34,7 +32,8 @@ def simulate_book_purchases(users_list: list, num_simulations:int):
             book_id, book_title, book_price, book_editorial, book_genre, book_author, book_isbn, book_page_length, book_language, book_mode = fetch_random_book()
             purchase_source = random.choice(['IOS', 'Android', 'Website'])
             purchase_date = set_random_date(year_start=2019, year_end=2024)
-            payment_type = random.choice(['DEBIT', 'CREDIT', 'BOOK_CARD_CREDIT'])
+            payment_type = random.choice(
+                ['DEBIT', 'CREDIT', 'BOOK_CARD_CREDIT'])
             payment_status = random.choice(
                 ['FAILED', 'SUCCESS', 'FRAUD', 'PENDING', 'NO_FUNDS', 'SUCCESS', 'SUCCESS', 'SUCCESS'])
             purchase_id = str(uuid.uuid4())
@@ -71,14 +70,13 @@ def simulate_book_purchases(users_list: list, num_simulations:int):
             }
             data = purchase
             data_json_formatted = json.dumps(data).encode('utf-8')
-            record_key = str(uuid.uuid4())
             KAFKA_PRODUCER.send(
                 topic=TOPIC,
                 value=data_json_formatted,
-                key=record_key
             )
             record += 1
-            print(f'Record sent successfully #{record}:  topic > {TOPIC}, RecId > {record_key}')
+            print(
+                f'Record sent successfully #{record}:  topic > {TOPIC}, RecId > {record_key}')
         except Exception as e:
             logging.error(f'An error ocurred >: {e}')
             continue

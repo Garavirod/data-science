@@ -9,5 +9,5 @@ def set_random_date(year_start: int, year_end: int):
     start = datetime.datetime(year_start, 1, 1)
     end = datetime.datetime(year_end, 1, 1)
 
-    return start + datetime.timedelta(
-        seconds=random.randint(0, int((end - start).total_seconds())))
+    return (start + datetime.timedelta(
+        seconds=random.randint(0, int((end - start).total_seconds())))).isoformat()
