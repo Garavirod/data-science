@@ -6,15 +6,13 @@ import uuid
 from kafka import KafkaProducer
 import logging
 import json
-
-TOPIC = 'books_purchasing'
-KAFKA_PRODUCER = KafkaProducer(
-    bootstrap_servers=['localhost:9092'],
-    max_block_ms=5000
-)
+from etl.load.load_users import load_users_to_system
+from utils.constants import BOOKPURCHASING_KAFKA_TOPIC, BROKER_SERVER_1
 
 
-def simulate_book_purchases(users_list: list, num_simulations: int):
+
+
+def simulate_book_purchases(users_list: list, num_simulations: int, producer:KafkaProducer):
     """  
     Simulates the fake user books purchasing like if the users did from its device (IOS, Android or Web) app.
     Data purchase is sent into a kafka topic by a producer.
@@ -70,15 +68,27 @@ def simulate_book_purchases(users_list: list, num_simulations: int):
             }
             data = purchase
             data_json_formatted = json.dumps(data).encode('utf-8')
-            KAFKA_PRODUCER.send(
-                topic=TOPIC,
+            topic = BOOKPURCHASING_KAFKA_TOPIC
+            producer.send(
+                topic=topic,
                 value=data_json_formatted,
             )
             record += 1
             print(
-                f'Record sent successfully #{record}:  topic > {TOPIC}, RecId > {record_key}')
+                f'Record sent successfully #{record}:  topic > {topic}')
         except Exception as e:
             logging.error(f'An error ocurred >: {e}')
             continue
         finally:
-            KAFKA_PRODUCER.flush()
+            producer.flush()
+
+
+if __name__ == '__main__':
+    print('Broker Used ',BROKER_SERVER_1)
+    producer = KafkaProducer(
+        bootstrap_servers=[BROKER_SERVER_1],
+        max_block_ms=5000
+    )
+    users = load_users_to_system(limit=10)
+    purchases = simulate_book_purchases(num_simulations=80, users_list=users, producer=producer)
+    producer.close()
