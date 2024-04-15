@@ -6,25 +6,34 @@ import uuid
 from kafka import KafkaProducer
 import logging
 import json
-from etl.load.load_users import load_users_to_system
+from etl.load.load_users import load_users
 from utils.constants import BOOKPURCHASING_KAFKA_TOPIC, BROKER_SERVER_1
+import click
 
 
-def simulate_book_purchases(users_list: list, num_simulations: int, producer: KafkaProducer):
+@click.command()
+@click.option('--count', default=30, help='Num of simulations')
+def simulate_book_purchases( count: int):
     """  
     Simulates the fake user books purchasing like if the users did from its device (IOS, Android or Web) app.
     Data purchase is sent into a kafka topic by a producer.
     """
-
-    if not users_list:
-        print("No users available for purchase")
-        return
-
     record = 0
 
-    while record <= num_simulations:
+    while record <= count:
+        users = load_users()
+
+        if not users:
+            print("No users available for purchase")
+            return
+
+        producer = KafkaProducer(
+            bootstrap_servers=[BROKER_SERVER_1],
+            max_block_ms=5000
+        )
+
         try:
-            user = random.choice(users_list)
+            user = random.choice(users)
             book_id, book_title, book_price, book_editorial, book_genre, book_author, book_isbn, book_page_length, book_language, book_mode = fetch_random_book()
             purchase_source = random.choice(['IOS', 'Android', 'Website'])
             purchase_date = set_random_date(year_start=2019, year_end=2024)
@@ -81,15 +90,8 @@ def simulate_book_purchases(users_list: list, num_simulations: int, producer: Ka
             continue
         finally:
             producer.flush()
-
+    producer.close()
 
 if __name__ == '__main__':
     print('Broker Used ', BROKER_SERVER_1)
-    producer = KafkaProducer(
-        bootstrap_servers=[BROKER_SERVER_1],
-        max_block_ms=5000
-    )
-    users = load_users_to_system(limit=10)
-    purchases = simulate_book_purchases(
-        num_simulations=80, users_list=users, producer=producer)
-    producer.close()
+    simulate_book_purchases()

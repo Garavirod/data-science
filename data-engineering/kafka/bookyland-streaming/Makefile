@@ -3,3 +3,6 @@ local-spark-job-consumer:
 
 run-kafka-producer: 
 	python simulator.py
+
+create-users:
+	python ./users-creation.py --count=100
