@@ -10,9 +10,7 @@ from etl.load.load_users import load_users_to_system
 from utils.constants import BOOKPURCHASING_KAFKA_TOPIC, BROKER_SERVER_1
 
 
-
-
-def simulate_book_purchases(users_list: list, num_simulations: int, producer:KafkaProducer):
+def simulate_book_purchases(users_list: list, num_simulations: int, producer: KafkaProducer):
     """  
     Simulates the fake user books purchasing like if the users did from its device (IOS, Android or Web) app.
     Data purchase is sent into a kafka topic by a producer.
@@ -78,17 +76,20 @@ def simulate_book_purchases(users_list: list, num_simulations: int, producer:Kaf
                 f'Record sent successfully #{record}:  topic > {topic}')
         except Exception as e:
             logging.error(f'An error ocurred >: {e}')
+            logging.error(
+                f'Error purchase >: {json.dumps(data_json_formatted, indent=3)}')
             continue
         finally:
             producer.flush()
 
 
 if __name__ == '__main__':
-    print('Broker Used ',BROKER_SERVER_1)
+    print('Broker Used ', BROKER_SERVER_1)
     producer = KafkaProducer(
         bootstrap_servers=[BROKER_SERVER_1],
         max_block_ms=5000
     )
     users = load_users_to_system(limit=10)
-    purchases = simulate_book_purchases(num_simulations=80, users_list=users, producer=producer)
+    purchases = simulate_book_purchases(
+        num_simulations=80, users_list=users, producer=producer)
     producer.close()

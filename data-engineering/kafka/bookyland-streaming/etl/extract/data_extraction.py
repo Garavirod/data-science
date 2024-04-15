@@ -48,12 +48,12 @@ def fetch_random_book():
     book_id = book['id']
     book_title = book['volumeInfo']['title']
     book_price = random.uniform(5, 50)
-    book_editorial = book['volumeInfo'].get('publisher', ['Unknown'])
-    book_page_length = book['volumeInfo'].get('pageCount', ['Unknown'])
-    book_genre = book['volumeInfo'].get('categories', ['Unknown'])[0]
-    book_language = book['volumeInfo'].get('language', ['Unknown'])
+    book_editorial = book['volumeInfo'].get('publisher', 'Unknown')
+    book_page_length = book['volumeInfo'].get('pageCount', 'Unknown')
+    book_genre = book['volumeInfo'].get('categories', 'Unknown')[0]
+    book_language = book['volumeInfo'].get('language', 'Unknown')
     book_mode = random.choice(book_modes)
-    book_author = book['volumeInfo'].get('authors', ['Unknown'])[0]
+    book_author = book['volumeInfo'].get('authors', 'Unknown')[0]
     book_isbn = book['volumeInfo'].get(
         'industryIdentifiers', [{'identifier': 'Unknown'}])[0]['identifier']
     return book_id, book_title, book_price, book_editorial, book_genre, book_author, book_isbn, book_page_length, book_language, book_mode,
@@ -72,5 +72,5 @@ def fetch_exchange_rate():
         'Bmx-Token': token
     })
     data = response.json()
-    exchange = data['bmx']['series'][0]['datos'][0]['dato']
+    exchange = data['bmx']['series'][0].get('datos','Unknown')[0]['dato']
     return exchange

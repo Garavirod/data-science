@@ -1,6 +1,7 @@
-from spark.connections import spark_connection, consume_from_kafka, create_spark_selection
+from spark.connections import spark_connection, consume_from_kafka, create_df_parsed
 from utils.constants import BOOKPURCHASING_KAFKA_TOPIC, BROKER_SERVER_1
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType, IntegerType, TimestampType
+from pyspark.sql.functions import col
 
 def create_schema():
     schema = StructType([
@@ -39,15 +40,18 @@ if __name__ == '__main__':
     spark = spark_connection("BookPurchasingKafkaStreaming")
 
     # Connect to kafka for consuming
-
     spark_df = consume_from_kafka(spark_conn=spark, server=server, topic=topic)
-
     schema = create_schema()
-    selection_sf = create_spark_selection(spark_df=spark_df, schema=schema)
+    df_parsed = create_df_parsed(spark_df=spark_df, schema=schema)
 
+    # filter by criteria
+    result_df = df_parsed.filter((col("book_mode") == "PDF") & (col("purchase_revenue") > 20.50))
+
+    # Select specific columns from DF
+    selection_df = result_df.select("user_id", "user_name", "book_mode", "purchase_revenue")
 
     # Print the data from Kafka topic
-    query = selection_sf \
+    query = selection_df \
         .writeStream \
         .outputMode("append") \
         .format("console") \
