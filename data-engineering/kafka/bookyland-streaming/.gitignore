@@ -1,2 +1,5 @@
 config
 __pycache__
+airflow_postgres.env
+airflow.env
+logs

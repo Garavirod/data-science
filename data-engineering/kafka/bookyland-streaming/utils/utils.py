@@ -1,5 +1,6 @@
 import datetime
 import random
+import json
 
 def set_random_date(year_start: int, year_end: int):
     """
@@ -11,3 +12,11 @@ def set_random_date(year_start: int, year_end: int):
 
     return (start + datetime.timedelta(
         seconds=random.randint(0, int((end - start).total_seconds())))).isoformat()
+
+
+def save_as_json_file(file_name:str, data):
+    try:
+        with open(f'../data/{file_name}.json', 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=3)
+    except Exception as e:
+        raise('Error on saving json file :> {e}')

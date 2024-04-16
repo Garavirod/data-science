@@ -8,29 +8,20 @@ import logging
 import json
 from etl.load.load_users import load_users
 from utils.constants import BOOKPURCHASING_KAFKA_TOPIC, BROKER_SERVER_1
-import click
+import time
 
 
-@click.command()
-@click.option('--count', default=30, help='Num of simulations')
-def simulate_book_purchases( count: int):
+def simulate_book_purchases(users: list, producer: KafkaProducer):
     """  
     Simulates the fake user books purchasing like if the users did from its device (IOS, Android or Web) app.
     Data purchase is sent into a kafka topic by a producer.
     """
     record = 0
+    end_time = time.time() + 60
+    while True:
 
-    while record <= count:
-        users = load_users()
-
-        if not users:
-            print("No users available for purchase")
-            return
-
-        producer = KafkaProducer(
-            bootstrap_servers=[BROKER_SERVER_1],
-            max_block_ms=5000
-        )
+        if time.time() > end_time: # run for 1 minute
+            break
 
         try:
             user = random.choice(users)
@@ -92,6 +83,19 @@ def simulate_book_purchases( count: int):
             producer.flush()
     producer.close()
 
+
 if __name__ == '__main__':
-    print('Broker Used ', BROKER_SERVER_1)
-    simulate_book_purchases()
+
+    users = load_users()
+    if not users:
+        raise ("No users available for purchase simulation")
+
+    producer = KafkaProducer(
+        bootstrap_servers=[BROKER_SERVER_1],
+        max_block_ms=5000
+    )
+
+    simulate_book_purchases(
+        users=users,
+        producer=producer
+    )

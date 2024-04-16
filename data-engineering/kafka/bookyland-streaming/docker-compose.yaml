@@ -1,3 +1,29 @@
+# Apcahe airflow common config
+x-airflow-common:
+  &airflow-common
+  build:
+    context: ./containers/airflow/
+    dockerfile: Dockerfile
+  image: custom-airflow:2.8.4-python3.9
+  env_file:
+    - airflow.env
+  volumes:
+    - ./config:/opt/airflow/config
+    - ./dags:/opt/airflow/dags
+    - ./data:/opt/airflow/data
+    - ./etl:/opt/airflow/etl
+    - ./logs:/opt/airflow/logs
+    - ./pipelines:/opt/airflow/pipelines
+    - ./plugins:/opt/airflow/plugins
+    - ./tests:/opt/airflow/tests
+    - ./utils:/opt/airflow/utils
+  # - ./airflow.cfg:/opt/airflow/airflow.cfg
+    - ./containers/airflow/requirements.txt:/opt/airflow/requirements.txt
+  depends_on:
+    - postgres
+    - redis
+
+# Services configuration
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -73,6 +99,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+
   control-center:
     image: confluentinc/cp-enterprise-control-center:7.4.0
     hostname: control-center
@@ -91,10 +118,11 @@ services:
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
-      CONFLUENT_METRICS_ENABLE: 'false'
+      CONFLUENT_METRICS_ENABLE: false
       PORT: 9021
     networks:
       - confluent
+
   spark-master:
       image: bitnami/spark:latest
       command: bin/spark-class org.apache.spark.deploy.master.Master
@@ -103,6 +131,7 @@ services:
         - "7077:7077"
       networks:
         - confluent
+
   spark-worker:
       image: bitnami/spark:latest
       command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
@@ -115,5 +144,74 @@ services:
         SPARK_MASTER_URL: spark://spark-master:7077
       networks:
         - confluent
+
+  postgres:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: airflow_bookyland
+      POSTGRES_PORT: 5432
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 5s
+      retries: 5
+    restart: always
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  airflow-init:
+    <<: *airflow-common
+    command: >
+      bash -c "pip install -r /opt/airflow/requirements.txt && airflow db init && airflow db upgrade && airflow users create --username admin --firstname admin --lastname admin --role Admin --email airflow@airflow.com --password admin"
+    restart: "no"
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "--fail",
+          "http://localhost:8080/health"
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'airflow jobs check --job-type SchedulerJob --hostname "$${HOSTNAME}"'
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  airflow-worker:
+    <<: *airflow-common
+    command: celery worker
+    healthcheck:
+      test: ["CMD-SHELL", 'celery -A airflow worker --loglevel=INFO --queues=celery']
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+# networks config
 networks:
  confluent:

@@ -2,6 +2,7 @@ from spark.connections import spark_connection, consume_from_kafka, create_df_pa
 from utils.constants import BOOKPURCHASING_KAFKA_TOPIC, BROKER_SERVER_1
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType, IntegerType, TimestampType
 from pyspark.sql.functions import col
+from jobs.queries.queries import group_by_city_and_payment_status
 
 def create_schema():
     schema = StructType([
@@ -44,16 +45,22 @@ if __name__ == '__main__':
     schema = create_schema()
     df_parsed = create_df_parsed(spark_df=spark_df, schema=schema)
 
+    df_with_watermark = df_parsed.withWatermark("purchase_date", "10 minutes")
+
     # filter by criteria
-    result_df = df_parsed.filter((col("book_mode") == "PDF") & (col("purchase_revenue") > 20.50))
+     #df_parsed.filter((col("book_mode") == "PDF") & (col("purchase_revenue") > 20.50))
+    result_df =  group_by_city_and_payment_status(
+        df=df_with_watermark,
+        payment_status='FAILED'
+    ) 
 
     # Select specific columns from DF
-    selection_df = result_df.select("user_id", "user_name", "book_mode", "purchase_revenue")
+    # selection_df = result_df.select("user_id", "purchase_id", "user_city", "purchase_revenue")
 
     # Print the data from Kafka topic
-    query = selection_df \
+    query = result_df \
         .writeStream \
-        .outputMode("append") \
+        .outputMode("update") \
         .format("console") \
         .start()
 

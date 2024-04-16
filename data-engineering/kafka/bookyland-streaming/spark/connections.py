@@ -44,5 +44,6 @@ def create_df_parsed(spark_df, schema):
     parsed = spark_df.selectExpr("CAST(value AS STRING)")\
         .select(from_json(col('value'), schema)\
         .alias('data'))\
-        .select("data.*") 
+        .select("data.*")\
+        #.withWatermark(eventTime='timestamp', delayThreshold='5 minutes')
     return parsed
