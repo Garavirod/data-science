@@ -9,7 +9,7 @@ import json
 from etl.load.load_users import load_users
 from utils.constants import BOOKPURCHASING_KAFKA_TOPIC, BROKER_SERVER_1
 import time
-
+from users_creation import generate_users
 
 def simulate_book_purchases(users: list, producer: KafkaProducer):
     """  
@@ -84,8 +84,10 @@ def simulate_book_purchases(users: list, producer: KafkaProducer):
     producer.close()
 
 
-if __name__ == '__main__':
-
+def run_kafka_simulation_producer():
+    # Generate users and save it
+    num_users = random.choice([100,200,150,90])
+    generate_users(num_users=num_users)
     users = load_users()
     if not users:
         raise ("No users available for purchase simulation")
