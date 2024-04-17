@@ -1,6 +1,7 @@
 import datetime
 import random
 import json
+from dateutil.relativedelta import relativedelta
 
 def set_random_date(year_start: int, year_end: int):
     """
@@ -20,3 +21,9 @@ def save_as_json_file(file_name:str, data):
             json.dump(data, f, ensure_ascii=False, indent=3)
     except Exception as e:
         raise('Error on saving json file :> {e}')
+    
+
+def get_date_prev_month():
+    current_time_date = datetime.datetime.now() - relativedelta(months=1)
+    current_time = current_time_date.isoformat()
+    return current_time

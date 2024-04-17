@@ -1,10 +1,13 @@
 
 import requests
 import time
-from utils.utils import set_random_date
+from utils.utils import set_random_date, get_date_prev_month
 import random
 import datetime
 from utils.constants import BANXICO_TOKEN
+from etl.load.load_users import load_users
+
+
 def fetch_random_user():
     """ 
     Fetch a fake data user from API Random User 
@@ -72,5 +75,61 @@ def fetch_exchange_rate():
         'Bmx-Token': token
     })
     data = response.json()
-    exchange = data['bmx']['series'][0].get('datos','Unknown')[0]['dato']
+    exchange = data['bmx']['series'][0].get('datos', 'Unknown')[0]['dato']
     return exchange
+
+
+def fetch_candidates_for_discount():
+    """
+        This function simulates an API call that fetches all users
+        who are candidates for applying a discount according to the
+        following criteria:
+        1. Purchases done in the previous month with more than three items
+
+    """
+
+    time.sleep(1)
+    # load registered users
+    users = load_users()
+    result = []
+    # sample size
+    num_to_choose = random.choice([30, 95, 60, 76, 80])
+    # chose randomly a number of users to take in account
+    randomly_users_to_chosen = random.choices(users, k=num_to_choose)
+    # preparing aip response
+    for u in randomly_users_to_chosen:
+        num_purchases = random.choice([3, 4, 5, 6, 7, 9, 10, 50, 100])
+        result.append({
+            'num_purchases': num_purchases,
+            'user_id': u['user_id'],
+            'timestamp_purchase': get_date_prev_month(),
+        })
+
+    return result
+
+
+def get_criteria_discount():
+    """  
+        This simulates the API call to verify the criteria discount
+        based in the number of items purchased.
+    """
+
+    criteria = {
+        'level_1': {
+            'at_least': random.choice([3, 4]),
+            'max': 3,
+            'discount': random.choice([0.05, 0.06, 0.08])
+        },
+        'level_2': {
+            'at_least': random.choice([5, 6]),
+            'max': 5,
+            'discount': random.choice([0.10, 0.12, 0.15])
+        },
+        'level_3': {
+            'at_least': random.choice([7, 8, 10]),
+            'max': 'infinity',
+            'discount': random.choice([0.10, 0.15, 0.20])
+        },
+    }
+
+    return criteria
