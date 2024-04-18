@@ -5,8 +5,8 @@ from utils.utils import set_random_date, get_date_prev_month
 import random
 import datetime
 from utils.constants import BANXICO_TOKEN
-from etl.load.load_users import load_users
-
+from etl.load.load_data import load_data_from_file
+file_name='users'
 
 def fetch_random_user():
     """ 
@@ -90,7 +90,7 @@ def fetch_candidates_for_discount():
 
     time.sleep(1)
     # load registered users
-    users = load_users()
+    users = load_data_from_file(file_name='users')
     result = []
     # sample size
     num_to_choose = random.choice([30, 95, 60, 76, 80])
@@ -113,7 +113,7 @@ def get_criteria_discount():
         This simulates the API call to verify the criteria discount
         based in the number of items purchased.
     """
-
+    time.sleep(1)
     criteria = {
         'level_1': {
             'at_least': random.choice([3, 4]),
@@ -133,3 +133,4 @@ def get_criteria_discount():
     }
 
     return criteria
+

@@ -1,23 +1,21 @@
-from utils.utils import set_random_date
+from utils.utils import set_random_date, save_as_json_file
 import random
 from etl.extract.data_extraction import fetch_random_book
 from etl.transform.transformations import set_exchange_usd_to_mxn
 import uuid
-from kafka import KafkaProducer
 import logging
-import json
-from etl.load.load_users import load_users
-from utils.constants import BOOKPURCHASING_KAFKA_TOPIC, BROKER_SERVER_1
+from etl.load.load_data import load_data_from_file
 import time
-from users_creation import generate_users
 
-def simulate_book_purchases(users: list, producer: KafkaProducer):
+
+def simulate_book_purchases():
     """  
     Simulates the fake user books purchasing like if the users did from its device (IOS, Android or Web) app.
     Data purchase is sent into a kafka topic by a producer.
     """
-    record = 0
     end_time = time.time() + 60
+    users = load_data_from_file(file_name='users')
+    purchases = []
     while True:
 
         if time.time() > end_time: # run for 1 minute
@@ -64,40 +62,12 @@ def simulate_book_purchases(users: list, producer: KafkaProducer):
                 'book_language': book_language,
                 'book_mode': book_mode,
             }
-            data = purchase
-            data_json_formatted = json.dumps(data).encode('utf-8')
-            topic = BOOKPURCHASING_KAFKA_TOPIC
-            producer.send(
-                topic=topic,
-                value=data_json_formatted,
-            )
-            record += 1
-            print(
-                f'Record sent successfully #{record}:  topic > {topic}')
+            purchases.append(purchase)
         except Exception as e:
             logging.error(f'An error ocurred >: {e}')
-            logging.error(
-                f'Error purchase >: {json.dumps(data_json_formatted, indent=3)}')
             continue
-        finally:
-            producer.flush()
-    producer.close()
 
-
-def run_kafka_simulation_producer():
-    # Generate users and save it
-    num_users = random.choice([100,200,150,90])
-    generate_users(num_users=num_users)
-    users = load_users()
-    if not users:
-        raise ("No users available for purchase simulation")
-
-    producer = KafkaProducer(
-        bootstrap_servers=[BROKER_SERVER_1],
-        max_block_ms=5000
-    )
-
-    simulate_book_purchases(
-        users=users,
-        producer=producer
+    save_as_json_file(
+        file_name='purchases',
+        data=purchases
     )

@@ -1,7 +1,8 @@
 from datetime import timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from purchase_simulator import run_kafka_simulation_producer
+from datalake.generate_dake_data_lake import generate_fake_data_lake
+from callables import call_api_for_candidates, call_api_for_getting_discount
 
 default_dag_args = {
     'owner':'Rod',
@@ -20,8 +21,25 @@ dag = DAG(
 )
 
 
-start_purchasing_streaming = PythonOperator(
-    task_id='books_purchasing_simulator',
-    python_callable=run_kafka_simulation_producer,
+generate_fake_data_lake = PythonOperator(
+    task_id='generate_fake_data_lake',
+    python_callable=generate_fake_data_lake,
+    dag=dag
+)
+
+extract_purchases = PythonOperator(
+    task_id='extract_purchases_from_data_lake',
+    python_callable=call_api_for_getting_discount
+)
+
+save_candidates_response = PythonOperator(
+    task_id='save_candidates_response',
+    python_callable=call_api_for_candidates,
+    dag=dag
+)
+
+save_api_criteria_response = PythonOperator(
+    task_id='save_api_criteria_response',
+    python_callable=call_api_for_getting_discount,
     dag=dag
 )

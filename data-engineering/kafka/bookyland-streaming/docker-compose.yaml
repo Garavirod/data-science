@@ -17,6 +17,7 @@ x-airflow-common:
     - ./plugins:/opt/airflow/plugins
     - ./tests:/opt/airflow/tests
     - ./utils:/opt/airflow/utils
+    - ./datalake:/opt/airflow/datalake
   # - ./airflow.cfg:/opt/airflow/airflow.cfg
     - ./containers/airflow/requirements.txt:/opt/airflow/requirements.txt
   depends_on:

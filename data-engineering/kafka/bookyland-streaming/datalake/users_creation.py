@@ -1,11 +1,13 @@
 from utils.utils import save_as_json_file
 from etl.extract.data_extraction import fetch_random_user
-import json
+import random
 
-def generate_users(num_users):
+
+def generate_users():
     """
         Creates the file users.json
     """
+    num_users = random.choice([100, 200, 150, 180])
     users = {}
     for _ in range(num_users):
         user = fetch_random_user()
@@ -16,6 +18,3 @@ def generate_users(num_users):
         file_name='users',
         data=users_list
     )
-    
-if __name__ == '__main__':
-    generate_users(num_users=100)
