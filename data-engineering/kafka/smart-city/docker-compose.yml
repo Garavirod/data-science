@@ -63,7 +63,7 @@ services:
         CONFLUENT_METRICS_ENABLE: 'false'
         CONFLUENT_SUPPORT_CUSTOMER_IO: 'anonymous'
       healthcheck:
-        test: ['CMD','bash', '-c', "nc -z localhost 9092"]
+        test: ['CMD','bash', '-c', "nc -z localhost 29092"]
         interval: 10s
         timeout: 5s
         retries: 5
